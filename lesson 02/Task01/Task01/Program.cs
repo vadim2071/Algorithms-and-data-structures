@@ -1,5 +1,9 @@
 ﻿using System;
 
+//1. Двусвязный список
+//Требуется реализовать класс двусвязного списка и операции вставки, удаления и поиска элемента в нём в соответствии с интерфейсом
+
+
 namespace Task01
 {
     class Program
@@ -45,10 +49,10 @@ namespace Task01
 
             }
 
-            public Node FindNode(int searchValue)
+           /* public Node FindNode(int searchValue)
             {
-                return ;
-            }
+               // return ;
+            }*/
 
         }
 
@@ -61,6 +65,10 @@ namespace Task01
             void RemoveNode(int index); // удаляет элемент по порядковому номеру
             void RemoveNode(Node node); // удаляет указанный элемент
             Node FindNode(int searchValue); // ищет элемент по его значению
+
+            Node FirstNode { get; } // первый элемент списка
+
+            Node LastNode { get; } // последний элемент списка
         }
     }
 }
