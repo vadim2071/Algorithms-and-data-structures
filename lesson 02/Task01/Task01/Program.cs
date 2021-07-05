@@ -10,7 +10,10 @@ namespace Task01
     {
         static void Main(string[] args)
         {
-            Node MiNode = new Node(); //создаю новый спискок firstNode
+            //Тесты
+            Node MiNode = new Node(); //создаю новый список firstNode
+            MiNode.FirstNode = MiNode; // запоминаю первый элемент списка
+            MiNode.LastNode = MiNode;  // запоминаю последний элемент списка 
             MiNode.Value = 12; // записываю в его первый элмент значение 12
             MiNode.AddNode(13); // добавляю следующий элемент списка со значением 13
             MiNode.AddNode(14);
@@ -18,53 +21,73 @@ namespace Task01
             MiNode.AddNode(16);
             MiNode.AddNode(17);
 
-            Console.WriteLine($"Количество элементов списка - {MiNode.GetCount()}");
-
-            //test
-            Node testNode = new Node();
-            testNode = MiNode;
-            Console.WriteLine($"Значение элемента списка {testNode.Value}");
-            while (testNode.NextNode != null) 
-            {
-                testNode = testNode.NextNode;
-                Console.WriteLine($"Значение элемента списка {testNode.Value}");
-            }
+            //вывод созданных элементво списка
+            printList(MiNode.FirstNode);
 
             MiNode.AddNodeAfter(MiNode.NextNode.NextNode.NextNode, 26); //добавляю новый элемент списка после 4-го элемента
-
-            //test
-            testNode = MiNode;
+            
+            //вывод после добавления элемента в середину списка
             Console.Write("Проверка списка после добавления \n");
-            Console.WriteLine($"Значение элемента списка {testNode.Value}");
-            while (testNode.NextNode != null)
-            {
-                testNode = testNode.NextNode;
-                Console.WriteLine($"Значение элемента списка {testNode.Value}");
-            }
+            printList(MiNode.FirstNode);
 
-            if (MiNode.FindNode(16) != null) Console.WriteLine("Элемент списка со значением 16 найден, только я не очень понял как его вывести на экран");
+            // поиск элментов со значением 16 и 18
+            Console.WriteLine("\nПоиск элемента 16");
+            if (MiNode.FindNode(16) != null) Console.WriteLine("Элемент списка со значением 16 найден");
             else Console.WriteLine("Элемент списка со значением 16 не найден");
-            if (MiNode.FindNode(18) != null) Console.WriteLine("Элемент списка со значением 18 найден, только я не очень понял как его вывести на экран");
+            Console.WriteLine("\nПоиск элемента 18");
+            if (MiNode.FindNode(18) != null) Console.WriteLine("Элемент списка со значением 18 найден");
             else Console.WriteLine("Элемент списка со значением 18 не найден");
 
-            Console.WriteLine("Удаление предпоследнего элемента списка со занчением 16");
-            MiNode.RemoveNode(MiNode.NextNode.NextNode.NextNode.NextNode);
-            if (MiNode.FindNode(16) != null) Console.WriteLine("Элемент списка со значением 16 найден, только я не очень понял как его вывести на экран");
-            else Console.WriteLine("Элемент списка со значением 16 не найден");
+            //удаление элемента списка переданного как аргумент
+            Console.WriteLine("\nУдаление элемента списка переданного как аргумент (со значением 14)");
+            MiNode.RemoveNode(MiNode.NextNode.NextNode);
+            if (MiNode.FindNode(14) != null) Console.WriteLine("Элемент списка со значением 14 найден");
+            else Console.WriteLine("Элемент списка со значением 14 не найден");
+            printList(MiNode.FirstNode);
 
+            // удаление элемента списка по индексу
+            Console.WriteLine("Удаление 2го по счету элемента списка (со значением 13)");
+            MiNode.RemoveNode(2);
+            if (MiNode.FindNode(13) != null) Console.WriteLine("Элемент списка со значением 13 найден");
+            else Console.WriteLine("Элемент списка со значением 13 не найден");
+            printList(MiNode.FirstNode);
+
+
+            // удаляю 1 и последний элемент списка и вывод всего списка
+
+            Console.WriteLine("\nудаляю 1 и вывод всего списка");
+            MiNode.RemoveNode(1);
+            printList(MiNode.FirstNode);
+            Console.WriteLine("\nудаляю последнего элемент списка и вывод всего списка");
+            MiNode.RemoveNode(MiNode.LastNode);
+            printList(MiNode.FirstNode);
+
+            static void printList(Node PrintNode)
+            {
+                Console.WriteLine($"Количество элементов списка - {PrintNode.GetCount()}. Значение первого элемента списка {PrintNode.FirstNode.Value} последнего элемента списка {PrintNode.LastNode.Value}");
+                Console.WriteLine($"Список элементов \nЗначение элемента списка {PrintNode.Value}");
+                while (PrintNode.NextNode != null)
+                {
+                    PrintNode = PrintNode.NextNode;
+                    Console.WriteLine($"Значение элемента списка {PrintNode.Value}");
+                }
+                Console.WriteLine("\n");
+            }
         }
 
-
+        
         public class Node : ILinkedList
         {
             public int Value { get; set; }
             public Node NextNode { get; set; }
             public Node PrevNode { get; set; }
+            public Node FirstNode { get; set; }
+            public Node LastNode { get; set; }
 
             public int GetCount()
             {
                 Node n = new Node();
-                n = this;
+                n = FirstNode;
                 int i = 1;
                 while (n.NextNode != null)
                 {
@@ -76,30 +99,31 @@ namespace Task01
 
             public void AddNode(int value)
             {
-                Node i = new Node();
-                i = this;
-
-                while(i.NextNode != null) i = i.NextNode;//нахожу последний элемент списка
-
                 Node NextNode = new Node(); // создаю новый элемент списка
-                i.NextNode = NextNode;   // в предыдущий элемент записываю ссылку на новый элемент
-                NextNode.PrevNode = i;   // в новом элементе записываю ссылку на предыдущий элемент
+                LastNode.NextNode = NextNode;   // в предыдущий элемент записываю ссылку на новый элемент
+                NextNode.PrevNode = LastNode;   // в новом элементе записываю ссылку на предыдущий элемент
                 NextNode.Value = value;     // записываю значенией в новый элемент
-
+                LastNode = NextNode;        // сохраняю последний элемент списка
             }
 
             public void AddNodeAfter(Node node,int value)
             {
                 Node newNode = new Node();
-                if (node.NextNode != null) newNode.NextNode = node.NextNode;
-                node.NextNode = newNode;
                 newNode.PrevNode = node;
                 newNode.Value = value;
+                if (node.NextNode != null) newNode.NextNode = node.NextNode; //если элемент списка не последний
+                else LastNode = newNode;                                     //если элемент списка последний запоминаем значение последнего элемента
+                node.NextNode = newNode;
             }
 
             public void RemoveNode(int index)
             {
-
+                if (index > FirstNode.GetCount()) return;
+                
+                Node delNode = FirstNode;
+                
+                for(int i = 1; i <= index-1; i++) delNode = delNode.NextNode;
+                RemoveNode(delNode);
             }
 
             public void RemoveNode(Node node)
@@ -109,14 +133,21 @@ namespace Task01
                     node.NextNode.PrevNode = node.PrevNode;
                     node.PrevNode.NextNode = node.NextNode;
                 }
-                else if (node.PrevNode != null & node.NextNode == null) node.PrevNode.NextNode = null; // если элемент списка последний
-                else if (node.PrevNode == null & node.NextNode != null) node.NextNode.PrevNode = null; // если элемент списка первый
+                else if (node.PrevNode != null & node.NextNode == null) // если элемент списка последний
+                {
+                    node.PrevNode.NextNode = null;
+                    LastNode = node.PrevNode;
+                }
+                else if (node.PrevNode == null & node.NextNode != null) // если элемент списка первый
+                {
+                    Console.WriteLine("нельзя удалить первый элемент ( пока не смог придумать как это сделать)");
+                    //нельзя удалить первый элемент ( пока не смог придумать как это сделать)
+                }
+                    
                 else
                 {
                     //элемент  является единственным
                 }
-                   
-
             }
 
            public Node FindNode(int searchValue)
@@ -133,25 +164,19 @@ namespace Task01
                 }
                 while (s.NextNode != null);
                 return null;
-
             }
-
         }
 
-        //Начальную и конечную ноду нужно хранить в самой реализации интерфейса
         public interface ILinkedList
         {
-            int GetCount(); // возвращает количество элементов в списке
-            void AddNode(int value);  // добавляет новый элемент списка
+            int GetCount();                         // возвращает количество элементов в списке
+            void AddNode(int value);                // добавляет новый элемент списка
             void AddNodeAfter(Node node, int value); // добавляет новый элемент списка после определённого элемента
-            void RemoveNode(int index); // удаляет элемент по порядковому номеру
-            void RemoveNode(Node node); // удаляет указанный элемент
-            Node FindNode(int searchValue); // ищет элемент по его значению
-
-            //Node FirstNode { get; } // первый элемент списка
-
-            //Node LastNode { get; } // последний элемент списка
+            void RemoveNode(int index);             // удаляет элемент по порядковому номеру
+            void RemoveNode(Node node);             // удаляет указанный элемент
+            Node FindNode(int searchValue);         // ищет элемент по его значению
+            Node FirstNode { get; set; }            // первый элемент списка
+            Node LastNode { get; set; }             // последний элемент списка
         }
     }
 }
-
