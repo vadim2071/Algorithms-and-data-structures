@@ -17,19 +17,19 @@ namespace Task01
     {
         static void Main(string[] args)
         {
-            PointClassFloat dot1 = new PointClassFloat();
-            dot1.X = 555161;
-            dot1.Y = 5151654;
+            PointClassFloat dot1 = new PointClassFloat {X = 651654165, Y = 546131 };
             PointClassFloat dot2 = new PointClassFloat();
-            dot2.X = 5,55566161;
+            dot2.X = 5,55566161F;
             dot2.Y = 515112654;
 
             Console.WriteLine(DistReferencFloat(dot1, dot2));
 
-            static float DistReferencFloat(PointClassFloat dot1, PointClassFloat dot2) // Обычный метод расчёта дистанции со ссылочным типом (PointClass — координаты типа float).
+            public static float DistReferencFloat(PointClassFloat dot1, PointClassFloat dot2) // Обычный метод расчёта дистанции со ссылочным типом (PointClass — координаты типа float).
             {
-                var i = Math.Sqrt((dot1.X - dot2.X) * (dot1.X - dot2.X) + (dot1.Y - dot2.Y) * (dot1.Y - dot2.Y));
-            return Math.Sqrt((dot1.X - dot2.X) * (dot1.X - dot2.X) + (dot1.Y - dot2.Y) * (dot1.Y - dot2.Y));
+                float x = dot1.X - dot2.X;
+                float y = dot1.Y - dot2.Y;
+                return Math.Sqrt(x * x + y * y);
+
             }
 
             static void DistMeaningfulFloat(PointStructFloat dot1, PointStructFloat dot2) // Обычный метод расчёта дистанции со значимым типом (PointStruct — координаты типа float).
