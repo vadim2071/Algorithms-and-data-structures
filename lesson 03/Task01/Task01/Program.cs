@@ -21,44 +21,55 @@ namespace Task01
 
             Stopwatch sw;
             float distanceFloat;
-            double distanceDoubel;
-            PointClassFloat dot1 = new PointClassFloat { X = 651654165, Y = 546131 };
+            double distanceDouble;
+            PointClassFloat dot1 = new PointClassFloat();
             PointClassFloat dot2 = new PointClassFloat();
-            float[,] floatArr = new float [2,5];
-            var rand = new Random();
-            for (int x= 0; x<5; x++)
-            {
-                for (int y = 0; y < 5; y++) floatArr[x, y] = rand.Next(1, 100000);
-                floatArr[x, x] = rand.Next(1, 100000);
 
-                Console.WriteLine(floatArr[x, x]);
+            float[,] floatArr =  { { 2375272741.2f, 947227122.2f, 6519728728.2f, 7862872774.2f, 88278276786.4f },{87782782795.5f, 67278258.5f, 5828782874.5f, 56872782785.5f, 445546.3f }, { 47935.5f, 655775788.5f, 58872854.5f, 5678285.5f, 453436.3f }, { 4538278278.2f, 4537872.2f, 786378282318.2f, 453444.2f, 4535346.4f } };
+            double[,] doubleArr = { { 2375272741.2, 947227122.2, 6519728728.2, 7862872774.2, 88278276786.4 }, { 87782782795.5, 67278258.5, 5828782874.5, 56872782785.5, 445546.3 }, { 47935.5, 655775788.5, 58872854.5, 5678285.5, 453436.3 }, { 4538278278.2, 4537872.2, 786378282318.2, 453444.2, 4535346.4 } };
 
-            }
-
-            Console.WriteLine("     Тест         Время");
+            Console.WriteLine("     Тест            Время");
 
             for (int i =0; i< 5; i++)
             {
                 sw = new Stopwatch();
-                sw.Start();
-                //проверяемый код
+                dot1.X = floatArr[0, i];
+                dot1.Y = floatArr[1, i];
+                dot2.X = floatArr[2, i];
+                dot2.Y = floatArr[3, i];
 
+                sw.Start();
+                distanceDouble = DistReferencFloat(dot1, dot2);
                 sw.Stop();
-                Console.WriteLine($"Тест № {i + 1, 5} время {sw.ElapsedMilliseconds, 20}");
+
+                Console.WriteLine($"Тест № {i + 1, 3}          время {sw.Elapsed}");
             }
 
+            PointStructDouble dot3 = new PointStructDouble();
+            PointStructDouble dot4 = new PointStructDouble();
+            for (int i = 0; i < 5; i++)
+            {
+                sw = new Stopwatch();
+                dot3.X = doubleArr[0, i];
+                dot3.Y = doubleArr[1, i];
+                dot4.X = doubleArr[2, i];
+                dot4.Y = doubleArr[3, i];
 
-            /*
-            Console.WriteLine(DistReferencFloat(dot1, dot2));
-            
-            public static float DistReferencFloat(PointClassFloat dot1, PointClassFloat dot2) // Обычный метод расчёта дистанции со ссылочным типом (PointClass — координаты типа float).
+                sw.Start();
+                distanceDouble = DistMeaningfulDouble(dot3, dot4);
+                sw.Stop();
+
+                Console.WriteLine($"Тест № {i + 1,3}          время {sw.Elapsed}");
+            }
+
+            static double DistReferencFloat(PointClassFloat dot1, PointClassFloat dot2) // Обычный метод расчёта дистанции со ссылочным типом (PointClass — координаты типа float).
             {
                 float x = dot1.X - dot2.X;
                 float y = dot1.Y - dot2.Y;
                 return Math.Sqrt(x * x + y * y);
 
             }
-            */
+            
             static void DistMeaningfulFloat(PointStructFloat dot1, PointStructFloat dot2) // Обычный метод расчёта дистанции со значимым типом (PointStruct — координаты типа float).
             {
 
