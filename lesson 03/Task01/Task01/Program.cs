@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 //Напишите тесты производительности для расчёта дистанции между точками с помощью BenchmarkDotNet.
 //Рекомендуем сгенерировать заранее массив данных, чтобы расчёт шёл с различными значениями, но сам код генерации должен происходить вне участка кода,
 //время которого будет тестироваться.
@@ -17,13 +18,39 @@ namespace Task01
     {
         static void Main(string[] args)
         {
-            PointClassFloat dot1 = new PointClassFloat {X = 651654165, Y = 546131 };
+
+            Stopwatch sw;
+            float distanceFloat;
+            double distanceDoubel;
+            PointClassFloat dot1 = new PointClassFloat { X = 651654165, Y = 546131 };
             PointClassFloat dot2 = new PointClassFloat();
-            dot2.X = 5,55566161F;
-            dot2.Y = 515112654;
+            float[,] floatArr = new float [2,5];
+            var rand = new Random();
+            for (int x= 0; x<5; x++)
+            {
+                for (int y = 0; y < 5; y++) floatArr[x, y] = rand.Next(1, 100000);
+                floatArr[x, x] = rand.Next(1, 100000);
 
+                Console.WriteLine(floatArr[x, x]);
+
+            }
+
+            Console.WriteLine("     Тест         Время");
+
+            for (int i =0; i< 5; i++)
+            {
+                sw = new Stopwatch();
+                sw.Start();
+                //проверяемый код
+
+                sw.Stop();
+                Console.WriteLine($"Тест № {i + 1, 5} время {sw.ElapsedMilliseconds, 20}");
+            }
+
+
+            /*
             Console.WriteLine(DistReferencFloat(dot1, dot2));
-
+            
             public static float DistReferencFloat(PointClassFloat dot1, PointClassFloat dot2) // Обычный метод расчёта дистанции со ссылочным типом (PointClass — координаты типа float).
             {
                 float x = dot1.X - dot2.X;
@@ -31,7 +58,7 @@ namespace Task01
                 return Math.Sqrt(x * x + y * y);
 
             }
-
+            */
             static void DistMeaningfulFloat(PointStructFloat dot1, PointStructFloat dot2) // Обычный метод расчёта дистанции со значимым типом (PointStruct — координаты типа float).
             {
 
