@@ -35,6 +35,12 @@ namespace Task_02
             }
             public Node GetNodeByValue(int value)
             {
+                Node find = GetRoot();
+                while (find.Data != value)
+                {
+                   if (find.Left != null) find = find.Left;
+                }
+
 
             }
             public void PrintTree()
