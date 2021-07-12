@@ -36,13 +36,13 @@ namespace Task_02
             tree.Right.Right.AddItem(1);
             tree.Right.Right.AddItem(17);
 
-            Console.WriteLine($"Значение корня -  { tree.Right.Right.GetRoot().Data}");
+            Console.WriteLine($"Значение корня -  { tree.Right.Right.GetRoot().Data}"); //вывод значения корня
 
-            tree.PrintTree();
-            if (tree.GetNodeByValue(55) != null) Console.WriteLine(" узел со значением 55 найден");
-            tree.RemoveItem(55);
-            tree.PrintTree();
-            if (tree.GetNodeByValue(55) == null) Console.WriteLine("после удаления узел со значением 55 не найден");
+            tree.PrintTree(); // вывод дерева
+            if (tree.GetNodeByValue(55) != null) Console.WriteLine(" узел со значением 55 найден"); //ищем узел со значением элмента 55
+            tree.RemoveItem(55); //удаляем узел со значением элемента 55
+            tree.PrintTree(); // вывод дерева
+            if (tree.GetNodeByValue(55) == null) Console.WriteLine("после удаления узел со значением 55 не найден");//ищем узел со значением элмента 55
         }
         public class Node : ITree
         {
@@ -57,7 +57,8 @@ namespace Task_02
                 while (find.Parent != null) find = find.Parent;
                 return find;
             }
-            public void AddItem(int value)
+            public void AddItem(int value) //добавление нового узла к текущему, если у текущего нет левой ветки, то новый узел становится левой веткой
+                                            // если нет правой ветки, то новый узел становится правой веткой, иначе новый узел не создается
             {
                 Node newNode = new Node {Data = value, Left = null, Right = null, Parent = this };
                 if (this.Left == null) this.Left = newNode;
