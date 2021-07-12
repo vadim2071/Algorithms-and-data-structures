@@ -18,25 +18,31 @@ namespace Task_02
             //           /\              \                   
             //          8  4              23                                      
 
-            Node tree = new Node { Data = 1, Left = null, Right = null, Parent = null };
+            Node tree = new Node { Data = 18, Left = null, Right = null, Parent = null };
             tree.AddItem(10);
             tree.AddItem(22);
             tree.Left.AddItem(11);
-            tree.Right.AddItem(13);
-            tree.GetNodeByValue(11).AddItem(5);
-            tree.GetNodeByValue(11).AddItem(7);
-            tree.GetNodeByValue(5).AddItem(8);
-            tree.GetNodeByValue(5).AddItem(4);
-            tree.GetNodeByValue(13).AddItem(44);
-            tree.GetNodeByValue(13).AddItem(55);
-            tree.GetNodeByValue(55).AddItem(23);
-            tree.GetNodeByValue(22).AddItem(77);
-            tree.GetNodeByValue(22).AddItem(88);
-            tree.GetNodeByValue(88).AddItem(1);
-            tree.GetNodeByValue(88).AddItem(17);
+            tree.Left.AddItem(13);
+            tree.Left.Left.AddItem(5);
+            tree.Left.Left.AddItem(7);
+            tree.Left.Left.Left.AddItem(8);
+            tree.Left.Left.Left.AddItem(4);
+            tree.Left.Right.AddItem(44);
+            tree.Left.Right.AddItem(55);
+            tree.Left.Right.Right.AddItem(23);
 
-            Node find = new Node();
-            Console.WriteLine($"")
+            tree.Right.AddItem(77);
+            tree.Right.AddItem(88);
+            tree.Right.Right.AddItem(1);
+            tree.Right.Right.AddItem(17);
+
+            Console.WriteLine($"Значение корня -  { tree.Right.Right.GetRoot().Data}");
+
+            tree.PrintTree();
+            if (tree.GetNodeByValue(55) != null) Console.WriteLine(" узел со значением 55 найден");
+            tree.RemoveItem(55);
+            tree.PrintTree();
+            if (tree.GetNodeByValue(55) == null) Console.WriteLine("после удаления узел со значением 55 не найден");
         }
         public class Node : ITree
         {
@@ -59,7 +65,9 @@ namespace Task_02
             }
             public void RemoveItem(int value) // удалить узел по значению
             {
-                Node del = FindNode(GetRoot(), value);
+                Node del = new Node();
+                del = this.GetNodeByValue(value);
+
                 if (del.Parent != null) // если есть верхний элемент (владелец удаляемого элемента)
                 {
                     if (del.Parent.Left == del) del.Parent.Left = null; // если удаляемый элемент является левой веткой владельца, уадаляем всю ветку 
@@ -82,7 +90,7 @@ namespace Task_02
                 Node returnNode = null;
                 if (find.Data == value) return find;
                 else if (find.Left != null) returnNode = FindNode(find.Left, value);
-                if (find.Right != null & returnNode != null) returnNode = FindNode(find.Right, value);
+                if (find.Right != null & returnNode == null) returnNode = FindNode(find.Right, value);
                 return returnNode;
             }
             public void PrintTree() //вывести дерево в консоль
@@ -91,10 +99,11 @@ namespace Task_02
             }
             public string PrintNext(Node node)
             {
-                string PrintString = $"({node.Data})";
-                if (node.Left != null & node.Right != null) PrintString = PrintString + "(" + PrintNext(node.Left) + "  " + PrintNext(node.Right) + ")";
-                else if (node.Left != null & node.Right == null) PrintString = PrintString + "(" + PrintNext(node.Left) + "  " + ")";
-                else if (node.Left == null & node.Right != null) PrintString = PrintString + "(" + "  " + PrintNext(node.Right) + ")";
+                string PrintString = $"({node.Data}";
+                if (node.Left != null & node.Right != null) PrintString = PrintString + "(" + PrintNext(node.Left) +  PrintNext(node.Right) + ")";
+                else if (node.Left != null & node.Right == null) PrintString = PrintString + "(" + PrintNext(node.Left) + ")";
+                else if (node.Left == null & node.Right != null) PrintString = PrintString + "(" + PrintNext(node.Right) + ")";
+                PrintString = PrintString + ")";
                 return PrintString;
 
             }
