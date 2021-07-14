@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Task_01
 {
@@ -6,7 +7,6 @@ namespace Task_01
     {
         static void Main(string[] args)
         {
-            //Тесты
             //создаем дерево
             //                      18
             //                  /           \
@@ -36,8 +36,47 @@ namespace Task_01
             tree.Right.Right.AddItem(1);
             tree.Right.Right.AddItem(17);
 
+            //обход в глубину
+            DFSerch(tree);
+            //обход в ширину
+            BFSearch(tree);
+
+
+            static void BFSearch (Node node) //обход в ширину
+            {
+                //обход в ширину
+                Console.WriteLine("Использование Очереди для обхода дерева в глубину");
+
+                Queue<Node> quaeue = new Queue<Node>(); // Инициализирум очередь 
+                quaeue.Enqueue(node.GetRoot());         //добавляем в очередь корень дерева
+                Node NodePrint = new Node();
+                while (quaeue.Count != 0)
+                {
+                    NodePrint = quaeue.Dequeue();
+                    Console.WriteLine($"Элемент {NodePrint.Data}");
+                    if (NodePrint.Left != null) quaeue.Enqueue(NodePrint.Left);
+                    if (NodePrint.Right != null) quaeue.Enqueue(NodePrint.Right);
+                }
+            }
             
+            static void DFSerch(Node node) //обход в глубину
+            {
+                Console.WriteLine("Использование Стека для обхода дерева в глубину");
+                Stack<Node> stack = new Stack<Node>(); // Инициализирум стек 
+                stack.Push(node.GetRoot());             //добавляем в стек корень дерева
+                Node NodePrint = new Node();
+                while (stack.Count != 0)
+                {
+                    NodePrint = stack.Pop();
+                    Console.WriteLine($"Элемент {NodePrint.Data}");
+                    if (NodePrint.Left != null) stack.Push(NodePrint.Left);
+                    if (NodePrint.Right != null) stack.Push(NodePrint.Right);
+                }
+            }
+
         }
+        
+
         public class Node : ITree
         {
             public int Data { get; set; }
