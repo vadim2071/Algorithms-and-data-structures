@@ -48,9 +48,59 @@ namespace Task_01
 
 
 
-            static void SerchDijkstra(int[,] grafPrint, int start, int end);
+            static void SerchDijkstra(int[,] grafPrint, int start, int end) //поиск кратчайшего пути. grafPrint - масcив графа, start - начало маршрута, end - конец маршрута)
             {
-                Console.WriteLine("Поиск кратчайшего пути");
+                Console.WriteLine($"поиск кратчайшего пути из вершины {start} в вершину {end}");
+                int lenght = grafPrint.Length / grafPrint.GetLength(0);
+                if (start > lenght + 1 || end > lenght+1 || start < 1 || end < 1) return; //проверяем чтобы вершины попадала в диапазон вершин
+                Queue<int> quaeue = new Queue<int>(); // Инициализирум очередь
+                
+                int point = start - 1;
+                quaeue.Enqueue(point);
+                int[] route = new int[] { 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000 }; // массив для хранения весов маршрутов
+
+                route[point] = 0;
+
+                while(quaeue.Count != 0)
+                {
+                    point = quaeue.Dequeue();
+                    for (int i = 0; i < lenght; i++) //ищем смежные вершины
+                    {
+                        if (grafPrint[point, i] != 5000) //если вершины смежные
+                        {
+                            if (route[point] + grafPrint[point, i] < route[i]) //если новый маршрут короче существующего
+                            {
+                                route[i] = route[point] + grafPrint[point, i];
+                                quaeue.Enqueue(i);
+                            }
+                        }
+                    }
+                }
+                Console.WriteLine($"Кратчайшего маршрут из вершины {start} в вершину {end} - {route[end-1]}");
+                // вывод самого маршрута
+                point = end - 1;
+                Stack<int> stack = new Stack<int>(); //Стэк для записи маршрута
+                stack.Push(point);
+
+                //quaeue.Enqueue(point);
+                while (point != start - 1)
+                {
+                    for (int i = 0; i < lenght; i++)//перебираем все вершины
+                    {
+                        if (grafPrint[point, i] != 5000) //если вершина смежная проверяем длину маршрута
+                        {
+                            if (route[point] - grafPrint[point,i] == route[i])
+                            {
+                                stack.Push(i);
+                                point = i;
+                            }
+                        }
+                    }
+                }
+
+                while (stack.Count != 0) Console.WriteLine($"Вершина {stack.Pop()+1}"); //Вывод промежуточных точек
+
+
             }
 
             static void BFSearch(int[,] grafPrint, int start) //обход в ширину. grafPrint - масcив графа, start - номер вершины с которой начинается обход
