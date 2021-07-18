@@ -32,7 +32,8 @@ namespace Task01
             Point start = new Point();
             start.X = 0;
             start.Y = 0;
-
+            MarkedField(start);
+            /*
             //создаю связанный список для обхода
             Field FieldList = new Field ();
             FieldList.PrevField = null;
@@ -40,13 +41,18 @@ namespace Task01
             FieldList.point = start;
             FieldList.FirstField = FieldList;
             FieldList.LastField = FieldList;
+            */
 
             // список для хранения лучшего маршрута
-            Field BestRoute = new Field { PrevField = null, NextField = null, point = start, FirstField = FieldList, LastField = FieldList };
+            Field BestRoute = new Field { PrevField = null, NextField = null, point = start, FirstField = null, LastField = null };
+            BestRoute.FirstField = BestRoute;
+            BestRoute.LastField = BestRoute;
 
             //список для текущего маршрута
-            Field CurentRoute = new Field {PrevField = null, NextField = null, point = start, FirstField = FieldList, LastField = FieldList};
-            
+            Field CurentRoute = new Field {PrevField = null, NextField = null, point = start, FirstField = null, LastField = null};
+            CurentRoute.FirstField = CurentRoute;
+            CurentRoute.LastField = CurentRoute;
+
             nextStep(start);
 
 
@@ -63,7 +69,9 @@ namespace Task01
 
                     CurentRoute.AddField(nextPoint); //добавляем новое поле в текущий маршрут
                     nextStep(nextPoint); // продолжаем обход из нового поля
-                } else if(GoTo(Move.DownRight, start, fields))
+                };
+                
+                if(GoTo(Move.DownRight, start, fields))
                 {
                     nextPoint.X = start.X + 2;      //помечаем что зашли в это поле
                     nextPoint.Y = start.Y + 1;
@@ -71,8 +79,9 @@ namespace Task01
 
                     CurentRoute.AddField(nextPoint); //добавляем новое поле в текущий маршрут
                     nextStep(nextPoint); // продолжаем обход из нового поля
-                }
-                else if (GoTo(Move.UpLeft, start, fields))
+                };
+                
+                if (GoTo(Move.UpLeft, start, fields))
                 {
                     nextPoint.X = start.X - 2;      //помечаем что зашли в это поле
                     nextPoint.Y = start.Y - 1;
@@ -80,8 +89,9 @@ namespace Task01
 
                     CurentRoute.AddField(nextPoint); //добавляем новое поле в текущий маршрут
                     nextStep(nextPoint); // продолжаем обход из нового поля
-                }
-                else if (GoTo(Move.UpRight, start, fields))
+                };
+                
+                if (GoTo(Move.UpRight, start, fields))
                 {
                     nextPoint.X = start.X - 2;      //помечаем что зашли в это поле
                     nextPoint.Y = start.Y + 1;
@@ -89,8 +99,9 @@ namespace Task01
 
                     CurentRoute.AddField(nextPoint); //добавляем новое поле в текущий маршрут
                     nextStep(nextPoint); // продолжаем обход из нового поля
-                }
-                else if (GoTo(Move.LeftDown, start, fields))
+                };
+
+                if (GoTo(Move.LeftDown, start, fields))
                 {
                     nextPoint.X = start.X + 1;      //помечаем что зашли в это поле
                     nextPoint.Y = start.Y - 2;
@@ -98,8 +109,9 @@ namespace Task01
 
                     CurentRoute.AddField(nextPoint); //добавляем новое поле в текущий маршрут
                     nextStep(nextPoint); // продолжаем обход из нового поля
-                }
-                else if (GoTo(Move.LeftUp, start, fields))
+                };
+                
+                if (GoTo(Move.LeftUp, start, fields))
                 {
                     nextPoint.X = start.X - 1;      //помечаем что зашли в это поле
                     nextPoint.Y = start.Y - 2;
@@ -107,8 +119,9 @@ namespace Task01
 
                     CurentRoute.AddField(nextPoint); //добавляем новое поле в текущий маршрут
                     nextStep(nextPoint); // продолжаем обход из нового поля
-                }
-                else if (GoTo(Move.RightDown, start, fields))
+                };
+
+                if (GoTo(Move.RightDown, start, fields))
                 {
                     nextPoint.X = start.X + 1;      //помечаем что зашли в это поле
                     nextPoint.Y = start.Y + 2;
@@ -116,8 +129,8 @@ namespace Task01
 
                     CurentRoute.AddField(nextPoint); //добавляем новое поле в текущий маршрут
                     nextStep(nextPoint); // продолжаем обход из нового поля
-                }
-                else if (GoTo(Move.RightUp, start, fields))
+                };
+                if (GoTo(Move.RightUp, start, fields))
                 {
                     nextPoint.X = start.X - 1;      //помечаем что зашли в это поле
                     nextPoint.Y = start.Y + 2;
@@ -126,45 +139,46 @@ namespace Task01
                     CurentRoute.AddField(nextPoint); //добавляем новое поле в текущий маршрут
                     nextStep(nextPoint); // продолжаем обход из нового поля
                 }
-                else //испробовали все возможные маршруты
+                //испробовали все возможные маршруты
+                int count = CurentRoute.GetCount();
+                Console.WriteLine($"BestRoute {BestRoute.GetCount()}     CurentRoute {CurentRoute.GetCount()}");
+                if (BestRoute.GetCount() < count)
                 {
-                    int count = CurentRoute.GetCount();
-                    if (BestRoute.GetCount() < count)
+                    Field copyField = new Field(); //временный список для копирвания текущего элемента из текущего маршрута
+                    copyField = CurentRoute.FirstField.NextField; //запоминате поле следующее после первого, с которога начинается обход
+                    BestRoute.FirstField.NextField = null; // удаляю старый маршрут и копирую новый из текущего
+                    int i = 1;
+                    while (i < count) //пока не прошлись по всему списку полей маршрута
                     {
-                        Field copyField = new Field(); //временный список для копирвания текущего лемента из текущего моршрута
-                        copyField = CurentRoute.FirstField.NextField; //запоминате поле следующее после первого, с которога начинается обход
-                        BestRoute.FirstField.NextField = null; // удаляю старый маршрут и копирую новый из текущего
-                        int i = 1;
-                        while (i < count-1) //пока не прошлись по всему списку полей маршрута
-                        {
-                            BestRoute.AddField(copyField.point);
-                            copyField = copyField.NextField;
-                            i++;
-                        }
-
-                        PrintRoute(BestRoute);
-                        Console.WriteLine("Для поиска следующего маршрута нажмите клавишу");
-                        Console.ReadLine();
-                        //BestRoute.FirstField.NextField = CurentRoute.FirstField.NextField; //сохраняем новый лучший маршрут !!! НЕПРАВИЛЬНО! будет сохранять изменения нижнего кода
-                        //надо еще удалить пометку из масива обойденных полей
-                        DeMarkedField(nextPoint); // или start !!???
-
-                        CurentRoute.RemoveField(); //удаляем последний ход, чтобы предыдущий вызов метода смог продолжить попытки дальнейшего обхода
+                        BestRoute.AddField(copyField.point);
+                        copyField = copyField.NextField;
+                        i++;
                     }
+
+                    PrintRoute(BestRoute);
+                    Console.WriteLine("Для поиска следующего маршрута нажмите клавишу");
+                    Console.ReadLine();
+                    //BestRoute.FirstField.NextField = CurentRoute.FirstField.NextField; //сохраняем новый лучший маршрут !!! НЕПРАВИЛЬНО! будет сохранять изменения нижнего кода
+                    //надо еще удалить пометку из масива обойденных полей
+                    DeMarkedField(CurentRoute.LastField.point); // или start !!???
+
+                    CurentRoute.RemoveField(); //удаляем последний ход, чтобы предыдущий вызов метода смог продолжить попытки дальнейшего обхода
+                    Console.WriteLine($"BestRoute {BestRoute.GetCount()}     CurentRoute {CurentRoute.GetCount()}");
                 }
+
             }
 
             void PrintRoute(Field printRoute)
             {
                 Field curenFieldPrint = printRoute.FirstField;
                 Console.WriteLine($"Маршрут обхода с количеством шагов - {printRoute.GetCount()}");
-                Console.WriteLine($"Начало обхода X - {curenFieldPrint.point.X} : Y - {curenFieldPrint.point.Y}");
+                //Console.WriteLine($"Начало обхода X - {curenFieldPrint.point.X} : Y - {curenFieldPrint.point.Y}");
                 while(curenFieldPrint.NextField != null)
                 {
                     Console.WriteLine($"Следующий шаг X - {curenFieldPrint.point.X} : Y - {curenFieldPrint.point.Y}");
                     curenFieldPrint = curenFieldPrint.NextField;
                 }
-                Console.WriteLine($"Конец обхода X - {curenFieldPrint.point.X} : Y - {curenFieldPrint.point.Y}");
+                Console.WriteLine($"Конец  обхода X - {curenFieldPrint.point.X} : Y - {curenFieldPrint.point.Y}");
             }
 
             void MarkedField(Point field) //помечаем поле как уже пройденное
@@ -199,7 +213,7 @@ namespace Task01
                         if ((start.X + 1 > size) || (start.Y + 2 > size) || (fields[start.X + 1, start.Y + 2])) canMove = false;
                         break;
                     case Move.RightUp:  //проверяет возможность хода конем направо вверх
-                        if ((start.X - 1 < 0) || (start.Y - 2 < 0) || (fields[start.X - 1, start.Y - 2])) canMove = false;
+                        if ((start.X - 1 < 0) || (start.Y + 2 > size) || (fields[start.X - 1, start.Y + 2])) canMove = false;
                         break;
                     case Move.DownLeft: //проверяет возможность хода конем вниз налево
                         if ((start.X + 2 > size) || (start.Y - 1 < 0) || (fields[start.X + 2, start.Y - 1])) canMove = false;
