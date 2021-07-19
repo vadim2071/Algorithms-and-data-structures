@@ -263,6 +263,16 @@ namespace Task01
 
             public void AddField(Point point)
             {
+                Field newField = new Field(); // создаю новый элемент списка
+                
+                newField.PrevField = LastField;   // в новом элементе записываю ссылку на предыдущий элемент
+                this.LastField.NextField = newField;   // в предыдущий элемент записываю ссылку на новый элемент
+                //NextField.point.X = point.X;     // записываю значенией в новый элемент
+                //NextField.point.Y = point.Y;
+                newField.point = point;
+                this.LastField = newField;        // сохраняю последний элемент списка
+
+                /* первоначальное решение
                 Field NextField = new Field(); // создаю новый элемент списка
                 LastField.NextField = NextField;   // в предыдущий элемент записываю ссылку на новый элемент
                 NextField.PrevField = LastField;   // в новом элементе записываю ссылку на предыдущий элемент
@@ -270,6 +280,17 @@ namespace Task01
                 //NextField.point.Y = point.Y;
                 NextField.point = point;
                 LastField = NextField;        // сохраняю последний элемент списка
+                */
+
+                /* кажется должно быть так
+                Field nextField = new Field(); // создаю новый элемент списка
+                LastField.NextField = nextField;   // в предыдущий элемент записываю ссылку на новый элемент+++++
+                nextField.PrevField = LastField;   // в новом элементе записываю ссылку на предыдущий элемент
+                //NextField.point.X = point.X;     // записываю значенией в новый элемент
+                //NextField.point.Y = point.Y;
+                nextField.point = point;
+                LastField = NextField;    
+                 */
             }
 
             public void RemoveField() //удаляет последний элемент
