@@ -19,29 +19,17 @@ namespace Task01
 
         static void Main(string[] args)
         {
-            int size = 5; // размер массива полей
+            int size = 6; // размер массива полей
             //создаем и заполняем массив для пометки полей в которых уже были
             bool[,] fields = new bool[size,size];
             for (int x = 0; x < size; x++) for (int y = 0; y < size; y++) fields[x, y] = false;
-            /*
-            // создаем массив для хранения найденного маршрута
-            Point[,] route = new Point[2, size * size];
-            */
+
 
             //задаем точку старта обхода
             Point start = new Point();
-            start.X = 0;
-            start.Y = 0;
+            start.X = 2;
+            start.Y = 3;
             MarkedField(start);
-            /*
-            //создаю связанный список для обхода
-            Field FieldList = new Field ();
-            FieldList.PrevField = null;
-            FieldList.NextField = null;
-            FieldList.point = start;
-            FieldList.FirstField = FieldList;
-            FieldList.LastField = FieldList;
-            */
 
             // список для хранения лучшего маршрута
             Field BestRoute = new Field { PrevField = null, NextField = null, point = start, FirstField = null, LastField = null };
@@ -54,12 +42,13 @@ namespace Task01
             CurentRoute.LastField = CurentRoute;
 
             nextStep(start);
-
+            PrintRoute(BestRoute);
 
 
 
             void nextStep(Point start)
             {
+                if (BestRoute.GetCount() == size*size) return; //зачем искать дальше если уже нашли
                 Point nextPoint = new Point();
                 if (GoTo(Move.DownLeft, start, fields)) //если есть возможность перейти
                 {
@@ -141,30 +130,32 @@ namespace Task01
                 }
                 //испробовали все возможные маршруты
                 int count = CurentRoute.GetCount();
-                Console.WriteLine($"BestRoute {BestRoute.GetCount()}     CurentRoute {CurentRoute.GetCount()}");
+                //Console.WriteLine($"BestRoute {BestRoute.GetCount()}     CurentRoute {CurentRoute.GetCount()}");
                 if (BestRoute.GetCount() < count)
                 {
-                    Field copyField = new Field(); //временный список для копирвания текущего элемента из текущего маршрута
-                    copyField = CurentRoute.FirstField.NextField; //запоминате поле следующее после первого, с которога начинается обход
+                    Field copyField = CurentRoute.FirstField.NextField; //запоминате поле следующее после первого, с которога начинается обход
+
                     BestRoute.FirstField.NextField = null; // удаляю старый маршрут и копирую новый из текущего
-                    int i = 1;
-                    while (i < count) //пока не прошлись по всему списку полей маршрута
+                    BestRoute.LastField = BestRoute.FirstField;
+
+                    for(int i=1; i < count; i++) //пока не прошлись по всему списку полей маршрута
                     {
                         BestRoute.AddField(copyField.point);
                         copyField = copyField.NextField;
-                        i++;
                     }
+                    Console.WriteLine($"Найден маршрут обхода - {count} шагов");
 
-                    PrintRoute(BestRoute);
-                    Console.WriteLine("Для поиска следующего маршрута нажмите клавишу");
-                    Console.ReadLine();
+                    //PrintRoute(BestRoute);
+                    //Console.WriteLine("Для поиска следующего маршрута нажмите клавишу");
+                    //Console.ReadLine();
                     //BestRoute.FirstField.NextField = CurentRoute.FirstField.NextField; //сохраняем новый лучший маршрут !!! НЕПРАВИЛЬНО! будет сохранять изменения нижнего кода
                     //надо еще удалить пометку из масива обойденных полей
-                    DeMarkedField(CurentRoute.LastField.point); // или start !!???
 
-                    CurentRoute.RemoveField(); //удаляем последний ход, чтобы предыдущий вызов метода смог продолжить попытки дальнейшего обхода
-                    Console.WriteLine($"BestRoute {BestRoute.GetCount()}     CurentRoute {CurentRoute.GetCount()}");
+                    //Console.WriteLine($"BestRoute {BestRoute.GetCount()}     CurentRoute {CurentRoute.GetCount()}");
                 }
+                DeMarkedField(CurentRoute.LastField.point); //удаляем последний ход, чтобы предыдущий вызов метода смог продолжить попытки дальнейшего обхода
+                CurentRoute.RemoveField();
+
 
             }
 
@@ -227,13 +218,6 @@ namespace Task01
 
         }
 
-        /*
-        public class Fields
-        {
-            public bool[,] pole  { get; set; }
-
-        }
-        */
         public class Point
         {
             public int X { get; set; }
@@ -261,41 +245,46 @@ namespace Task01
                 return i;
             }
 
-            public void AddField(Point point)
+            public void AddField(Point Pnt)
             {
-                Field newField = new Field(); // создаю новый элемент списка
-                
-                newField.PrevField = LastField;   // в новом элементе записываю ссылку на предыдущий элемент
-                this.LastField.NextField = newField;   // в предыдущий элемент записываю ссылку на новый элемент
-                //NextField.point.X = point.X;     // записываю значенией в новый элемент
-                //NextField.point.Y = point.Y;
-                newField.point = point;
-                this.LastField = newField;        // сохраняю последний элемент списка
 
-                /* первоначальное решение
+                /*/первоначальное решение
                 Field NextField = new Field(); // создаю новый элемент списка
                 LastField.NextField = NextField;   // в предыдущий элемент записываю ссылку на новый элемент
                 NextField.PrevField = LastField;   // в новом элементе записываю ссылку на предыдущий элемент
-                //NextField.point.X = point.X;     // записываю значенией в новый элемент
-                //NextField.point.Y = point.Y;
-                NextField.point = point;
+                Point newPoint = new Point();
+                newPoint.X = Pnt.X;
+                newPoint.Y = Pnt.Y;
+                //NextField.point.X = Pnt.X;     // записываю значенией в новый элемент
+                //NextField.point.Y = Pnt.Y;
+                NextField.point = newPoint;
                 LastField = NextField;        // сохраняю последний элемент списка
                 */
 
-                /* кажется должно быть так
+                // кажется должно быть так
+                //Field curent = this.LastField;
                 Field nextField = new Field(); // создаю новый элемент списка
                 LastField.NextField = nextField;   // в предыдущий элемент записываю ссылку на новый элемент+++++
                 nextField.PrevField = LastField;   // в новом элементе записываю ссылку на предыдущий элемент
-                //NextField.point.X = point.X;     // записываю значенией в новый элемент
-                //NextField.point.Y = point.Y;
-                nextField.point = point;
-                LastField = NextField;    
-                 */
+                LastField = nextField;    
+
+                Point newPoint = new Point();
+                //int X = Pnt.X;                  //костыль чтобы записать значение, а не ссылку
+                //int Y = Pnt.Y;
+                newPoint.X = Pnt.X;                 // записываю значенией в новый элемент
+                newPoint.Y = Pnt.Y;                 
+                nextField.point = newPoint;
+                
             }
 
             public void RemoveField() //удаляет последний элемент
             {
-                if (LastField.PrevField != null) LastField.PrevField.NextField = null; // если удаляемый шаг не первыйудаляем ссылку на удалямый шаг
+                if (LastField.PrevField != null) 
+                {
+                    Field temp  = LastField.PrevField;
+                    LastField.PrevField.NextField = null; // если удаляемый шаг не первыйудаляем ссылку на удалямый шаг
+                    FirstField.LastField = temp;
+                } 
                 else Console.WriteLine("нельзя удалить первый шаг");  //нельзя удалить первый шаг
             }
 
