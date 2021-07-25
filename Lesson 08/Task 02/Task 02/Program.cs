@@ -20,118 +20,172 @@ namespace Task_02
         static void Main(string[] args)
         {
             string FilePass = Directory.GetCurrentDirectory() + "\\"; //определяем текущее места запуска проекта для сохранения файлов сортирвокм
-            // создаем файл для хранения данных которые необходимо сортировать, если он есть, то он перезаписывается
-            string file = "NeedSort.txt";
-            File.Create(file);
+            // создаем "Большой" файл для хранения данных которые необходимо сортировать, если он есть, то он перезаписывается
+            string file_sort = FilePass + "NeedSort.txt";
+            File.Create(file_sort).Close();
             int num = 10000; //- количество элементов для сортировки
             Random rand = new Random();
 
+            //заполняем файл случайными числами
 
-            for(int i = 0; i < num; i++) 
+
+            int v = rand.Next(1000);
+            File.AppendAllText(file_sort, v.ToString());
+            for (int i = 0; i < num-1; i++) 
             {
-                var v= rand.Next(1000)
-                File.WriteAllLines(FilePass + file, v.ToString());
-            }
-                
-                
-
-
-
-
-
-
-            /*
-            int[] SortArr = new int[100]; //массив для сортировки
-            Random rand = new Random();
-            int size = 100; //размер массива для сортировки
-            int max = 100; //максимальный число в массиве для сортировки
-
-
-            for (int i = 0; i < size; i++) //генерация чисел для заполнения массива
-            {
-                SortArr[i] = rand.Next(max);
-                Console.WriteLine(SortArr[i]);
+                File.AppendAllText(file_sort, Environment.NewLine);
+                v = rand.Next(1000);
+                File.AppendAllText(file_sort, v.ToString());
             }
 
-            SortArr = BucketSort(SortArr); //сортируме массив
+            
+            //предполагаем что файлов для хранения временных файлов длz сортировки достаточно 10, создаем их
+            string file_100 = "FilePass + file_100.txt";
+            string file_200 = "FilePass + file_200.txt";
+            string file_300 = "FilePass + file_300.txt";
+            string file_400 = "FilePass + file_400.txt";
+            string file_500 = "FilePass + file_500.txt";
+            string file_600 = "FilePass + file_600.txt";
+            string file_700 = "FilePass + file_700.txt";
+            string file_800 = "FilePass + file_800.txt";
+            string file_900 = "FilePass + file_900.txt";
+            string file_1000 = "FilePass + file_1000.txt";
 
-            Console.WriteLine("Отсортированный массив");
-            for (int i = 0; i < size; i++) //вывод массива в консоль
+            BigFileToSmallFile(file_sort);
+            File.Create(file_sort).Close(); //очищаем Большой файл
+
+            Console.WriteLine("нажмите Ентер для сортиовки малых файлов");
+            Console.ReadLine();
+
+            SortSmallFile(file_100);
+            SortSmallFile(file_200);
+            SortSmallFile(file_300);
+            SortSmallFile(file_400);
+            SortSmallFile(file_500);
+            SortSmallFile(file_600);
+            SortSmallFile(file_700);
+            SortSmallFile(file_800);
+            SortSmallFile(file_900);
+            SortSmallFile(file_1000);
+
+            SmallFileToBig(file_sort);
+
+
+
+            void BigFileToSmallFile(string PathFile) // метод сохраняет 10 файлов с набором чисел в одном диапазоне с  шагом 100
             {
-                Console.WriteLine(SortArr[i]);
-            }
+                File.Create(file_100).Close();
+                File.Create(file_200).Close();
+                File.Create(file_300).Close();
+                File.Create(file_400).Close();
+                File.Create(file_500).Close();
+                File.Create(file_600).Close();
+                File.Create(file_700).Close();
+                File.Create(file_800).Close();
+                File.Create(file_900).Close();
+                File.Create(file_1000).Close();
 
+                int num_temp;
+                StreamReader file = new StreamReader(PathFile);
+                StreamWriter Sfile_100 = new StreamWriter(file_100);
+                StreamWriter Sfile_200 = new StreamWriter(file_200);
+                StreamWriter Sfile_300 = new StreamWriter(file_300);
+                StreamWriter Sfile_400 = new StreamWriter(file_400);
+                StreamWriter Sfile_500 = new StreamWriter(file_500);
+                StreamWriter Sfile_600 = new StreamWriter(file_600);
+                StreamWriter Sfile_700 = new StreamWriter(file_700);
+                StreamWriter Sfile_800 = new StreamWriter(file_800);
+                StreamWriter Sfile_900 = new StreamWriter(file_900);
+                StreamWriter Sfile_1000 = new StreamWriter(file_1000);
 
-            static int[] BucketSort(int[] array)
-            {
-                int size = array.Length;
-                //списки для хранения блоков сортировки
-                List<int> arr_0_10 = new List<int>();
-                List<int> arr_11_20 = new List<int>();
-                List<int> arr_21_30 = new List<int>();
-                List<int> arr_31_40 = new List<int>();
-                List<int> arr_41_50 = new List<int>();
-                List<int> arr_51_60 = new List<int>();
-                List<int> arr_61_70 = new List<int>();
-                List<int> arr_71_80 = new List<int>();
-                List<int> arr_81_90 = new List<int>();
-                List<int> arr_91_100 = new List<int>();
+                string line; //для хранения прочитанной строчки из большого файла
 
-                //распределяем содержимое массива для сортироваки по блокам
-                for (int i = 0; i < size; i++)
+                while ((line = file.ReadLine()) != null)
                 {
-                    if (array[i] >= 0 & array[i] <= 10) arr_0_10.Add(array[i]);
-                    else if (array[i] > 10 & array[i] <= 20) arr_11_20.Add(array[i]);
-                    else if (array[i] > 20 & array[i] <= 30) arr_21_30.Add(array[i]);
-                    else if (array[i] > 30 & array[i] <= 40) arr_31_40.Add(array[i]);
-                    else if (array[i] > 40 & array[i] <= 50) arr_41_50.Add(array[i]);
-                    else if (array[i] > 50 & array[i] <= 60) arr_51_60.Add(array[i]);
-                    else if (array[i] > 60 & array[i] <= 70) arr_61_70.Add(array[i]);
-                    else if (array[i] > 70 & array[i] <= 80) arr_71_80.Add(array[i]);
-                    else if (array[i] > 80 & array[i] <= 90) arr_81_90.Add(array[i]);
-                    else if (array[i] > 90 & array[i] <= 100) arr_91_100.Add(array[i]);
+                    num_temp = Convert.ToInt32(line);
+                    if (num_temp >= 0 & num_temp <= 100) Sfile_100.WriteLine(num_temp);
+                    else if (num_temp > 100 & num_temp <= 200) Sfile_200.WriteLine(num_temp);
+                    else if (num_temp > 200 & num_temp <= 300) Sfile_300.WriteLine(num_temp);
+                    else if (num_temp > 300 & num_temp <= 400) Sfile_400.WriteLine(num_temp);
+                    else if (num_temp > 400 & num_temp <= 500) Sfile_500.WriteLine(num_temp);
+                    else if (num_temp > 500 & num_temp <= 600) Sfile_600.WriteLine(num_temp);
+                    else if (num_temp > 600 & num_temp <= 700) Sfile_700.WriteLine(num_temp);
+                    else if (num_temp > 700 & num_temp <= 800) Sfile_800.WriteLine(num_temp);
+                    else if (num_temp > 800 & num_temp <= 900) Sfile_900.WriteLine(num_temp);
+                    else if (num_temp > 900 & num_temp <= 1000) Sfile_1000.WriteLine(num_temp);
                 }
+                file.Close();
+                Sfile_100.Close();
+                Sfile_200.Close();
+                Sfile_300.Close();
+                Sfile_400.Close();
+                Sfile_500.Close();
+                Sfile_600.Close();
+                Sfile_700.Close();
+                Sfile_800.Close();
+                Sfile_900.Close();
+                Sfile_1000.Close();
+            }
 
-                //сортировка
-                QuickSort(arr_0_10, 0, arr_0_10.Count - 1);
-                QuickSort(arr_11_20, 0, arr_11_20.Count - 1);
-                QuickSort(arr_21_30, 0, arr_21_30.Count - 1);
-                QuickSort(arr_31_40, 0, arr_31_40.Count - 1);
-                QuickSort(arr_41_50, 0, arr_41_50.Count - 1);
-                QuickSort(arr_51_60, 0, arr_51_60.Count - 1);
-                QuickSort(arr_61_70, 0, arr_61_70.Count - 1);
-                QuickSort(arr_71_80, 0, arr_71_80.Count - 1);
-                QuickSort(arr_81_90, 0, arr_81_90.Count - 1);
-                QuickSort(arr_91_100, 0, arr_91_100.Count - 1);
+            void SortSmallFile(string sort_file) //метод сортировки файла с помощью списков и быстрой сортировки
+            {
+                List<int> SortList = new List<int>();
+                StreamReader file_R = new StreamReader(sort_file);
+                string nextLine;
+                while ((nextLine = file_R.ReadLine()) != null) SortList.Add(Convert.ToInt32(nextLine)); //переносим содержимое файла в список
 
+                int count = SortList.Count;
+                QuickSort(SortList, 0, count-1); //сортируем список
+                file_R.Close();
+                File.Create(sort_file).Close();         //стираю старый файл 
+                StreamWriter file_W = new StreamWriter(sort_file);
+                for (int i =0; i < count; i++) file_W.WriteLine(SortList[i]); //возвращаем отсортированные данные обратно в файл
+                file_W.Close();
+            }
 
-                //собирам обратно отсортированный массив
-                int num = 0;
-                arr_0_10.CopyTo(array, num);
-                num = num + arr_0_10.Count;
-                arr_11_20.CopyTo(array, num);
-                num = num + arr_11_20.Count;
-                arr_21_30.CopyTo(array, num);
-                num = num + arr_21_30.Count;
-                arr_31_40.CopyTo(array, num);
-                num = num + arr_31_40.Count;
-                arr_41_50.CopyTo(array, num);
-                num = num + arr_41_50.Count;
-                arr_51_60.CopyTo(array, num);
-                num = num + arr_51_60.Count;
-                arr_61_70.CopyTo(array, num);
-                num = num + arr_61_70.Count;
-                arr_71_80.CopyTo(array, num);
-                num = num + arr_71_80.Count;
-                arr_81_90.CopyTo(array, num);
-                num = num + arr_81_90.Count;
-                arr_91_100.CopyTo(array, num);
-                return array;
+            void SmallFileToBig(string PathFile)  // метод сбора маленьких файлов в большой
+            {
+                int num_temp;
+                StreamWriter file = new StreamWriter(PathFile);
+                StreamReader Sfile_100 = new StreamReader(file_100);
+                StreamReader Sfile_200 = new StreamReader(file_200);
+                StreamReader Sfile_300 = new StreamReader(file_300);
+                StreamReader Sfile_400 = new StreamReader(file_400);
+                StreamReader Sfile_500 = new StreamReader(file_500);
+                StreamReader Sfile_600 = new StreamReader(file_600);
+                StreamReader Sfile_700 = new StreamReader(file_700);
+                StreamReader Sfile_800 = new StreamReader(file_800);
+                StreamReader Sfile_900 = new StreamReader(file_900);
+                StreamReader Sfile_1000 = new StreamReader(file_1000);
+
+                string line; //для хранения прочитанной строчки из большого файла
+
+                while ((line = Sfile_100.ReadLine()) != null) file.WriteLine(line);
+                while ((line = Sfile_200.ReadLine()) != null) file.WriteLine(line);
+                while ((line = Sfile_300.ReadLine()) != null) file.WriteLine(line);
+                while ((line = Sfile_400.ReadLine()) != null) file.WriteLine(line);
+                while ((line = Sfile_500.ReadLine()) != null) file.WriteLine(line);
+                while ((line = Sfile_600.ReadLine()) != null) file.WriteLine(line);
+                while ((line = Sfile_700.ReadLine()) != null) file.WriteLine(line);
+                while ((line = Sfile_800.ReadLine()) != null) file.WriteLine(line);
+                while ((line = Sfile_900.ReadLine()) != null) file.WriteLine(line);
+                while ((line = Sfile_1000.ReadLine()) != null) file.WriteLine(line);
+
+                file.Close();
+                Sfile_100.Close();
+                Sfile_200.Close();
+                Sfile_300.Close();
+                Sfile_400.Close();
+                Sfile_500.Close();
+                Sfile_600.Close();
+                Sfile_700.Close();
+                Sfile_800.Close();
+                Sfile_900.Close();
+                Sfile_1000.Close();
             }
 
 
-
-            static void QuickSort(List<int> list, int first, int last)
+            static void QuickSort(List<int> list, int first, int last) //метод быстройсортировки
             {
                 if (list.Count == 0) return;
                 int i = first, j = last, x = list[(first + last) / 2];
@@ -161,7 +215,7 @@ namespace Task_02
                     QuickSort(list, i, last);
                 if (first < j)
                     QuickSort(list, first, j);
-            }*/
+            }
         }
     }
 }
