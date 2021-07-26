@@ -23,12 +23,10 @@ namespace Task_02
             // создаем "Большой" файл для хранения данных которые необходимо сортировать, если он есть, то он перезаписывается
             string file_sort = FilePass + "NeedSort.txt";
             File.Create(file_sort).Close();
-            int num = 10000; //- количество элементов для сортировки
+            int num = 10000; //- количество элементовв файле для сортировки
             Random rand = new Random();
 
             //заполняем файл случайными числами
-
-
             int v = rand.Next(1000);
             File.AppendAllText(file_sort, v.ToString());
             for (int i = 0; i < num-1; i++) 
@@ -38,8 +36,9 @@ namespace Task_02
                 File.AppendAllText(file_sort, v.ToString());
             }
 
-            
-            //предполагаем что файлов для хранения временных файлов длz сортировки достаточно 10, создаем их
+            int countTempFiles = GetCountFiles(file_sort);
+
+            //предполагаем что файлов для хранения временных файлов для сортировки достаточно 10, создаем их
             string file_100 = "FilePass + file_100.txt";
             string file_200 = "FilePass + file_200.txt";
             string file_300 = "FilePass + file_300.txt";
@@ -71,8 +70,13 @@ namespace Task_02
             SmallFileToBig(file_sort);
 
 
+            int GetCountFiles(string SortFile) //метод который анализирует сортируемый файл и выдает количество временных файлов для сортировки
+            {
+                return 10; // в нашем случае не реализовано, предполагаем что надо 10 файлов
+            }
 
-            void BigFileToSmallFile(string PathFile) // метод сохраняет 10 файлов с набором чисел в одном диапазоне с  шагом 100
+            void BigFileToSmallFile(string sortFile) // метод сохраняет 10 файлов с набором чисел в одном диапазоне с  шагом 100
+
             {
                 File.Create(file_100).Close();
                 File.Create(file_200).Close();
@@ -86,7 +90,7 @@ namespace Task_02
                 File.Create(file_1000).Close();
 
                 int num_temp;
-                StreamReader file = new StreamReader(PathFile);
+                StreamReader file = new StreamReader(sortFile);
                 StreamWriter Sfile_100 = new StreamWriter(file_100);
                 StreamWriter Sfile_200 = new StreamWriter(file_200);
                 StreamWriter Sfile_300 = new StreamWriter(file_300);
